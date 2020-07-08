@@ -20,6 +20,11 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 
 
+
+const getBuilding = require('./api/building/getBuilding')
+
+app.use([getBuilding])
+
 //---Start the express server---------------------------------------------------
 
 const startServer = () => {
