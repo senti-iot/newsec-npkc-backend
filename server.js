@@ -9,6 +9,10 @@ const cors = require('cors')
 const helmet = require('helmet')
 const app = express()
 
+const sentiAuthClient = require('senti-apicore').sentiAuthClient
+const authClient = new sentiAuthClient(process.env.SENTICOREURL, process.env.PASSWORDSALT)
+module.exports.authClient = authClient
+
 // API endpoint imports
 
 const port = process.env.NODE_PORT || 3032
@@ -18,6 +22,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use(cors())
+
 
 
 

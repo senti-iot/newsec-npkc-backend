@@ -20,15 +20,25 @@ const router = express.Router()
  * @const
  */
 var mysqlConn = require('../../mysql/mysql_handler')
-
+/**
+ * Auth Client
+ * @const authClient
+ */
+const { authClient } = require('../../server')
 
 /**
  * Route serving a device based on UUID provided
- * @function GET /v2/device/:uuid
+ * @function GET /building/:uuid
  * @memberof module:routers/devices
  * @param {String} req.params.uuid UUID of the Requested Device
  */
 router.get('/building/:uuid', async (req, res) => {
+	let lease = await authClient.getLease(req)
+	if (lease === false) {
+		res.status(401).json()
+		return
+	}
+
 	let select = `SELECT * FROM  building WHERE uuid = ?`
 	let rs = await mysqlConn.query(select, [req.params.uuid])
 	if (rs[0].length === 0) {
