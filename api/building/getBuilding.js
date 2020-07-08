@@ -28,7 +28,7 @@ var mysqlConn = require('../../mysql/mysql_handler')
  * @memberof module:routers/devices
  * @param {String} req.params.uuid UUID of the Requested Device
  */
-router.get('/building:uuid', async (req, res) => {
+router.get('/building/:uuid', async (req, res) => {
 	let select = `SELECT * FROM  building WHERE uuid = ?`
 	let rs = await mysqlConn.query(select, [req.params.uuid])
 	if (rs[0].length === 0) {
