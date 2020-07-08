@@ -19,7 +19,7 @@ const router = express.Router()
  * MySQL connector
  * @const
  */
-var mysqlConn = require('../../../mysql/mysql_handler')
+var mysqlConn = require('../../mysql/mysql_handler')
 
 
 /**
