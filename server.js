@@ -27,8 +27,9 @@ app.use(cors())
 
 
 const getBuilding = require('./api/building/getBuilding')
+const getBuildings = require('./api/building/getBuildings')
 
-app.use([getBuilding])
+app.use([getBuilding, getBuildings])
 
 //---Start the express server---------------------------------------------------
 
