@@ -38,7 +38,7 @@ router.get('/buildings', async (req, res) => {
 		res.status(401).json()
 		return
 	}
-	let select = `SELECT id, uuid, no, name, group, relativeCO2Score FROM  building`
+	let select = `SELECT id, uuid, no, name, grouptype, relativeCO2Score FROM  building`
 	let rs = await mysqlConn.query(select, [])
 	if (rs[0].length === 0) {
 		res.status(404).json()
