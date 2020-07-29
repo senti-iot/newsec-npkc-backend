@@ -42,7 +42,7 @@ router.get('/buildings', async (req, res) => {
 					(SELECT json_arrayagg(json_object('deviceId', BD.deviceId, 'uuid', BD.deviceUuid, 'type', BD.type))
 						FROM buildingdevices BD
 						WHERE BD.buildingId = B.id) as devices 
-					FROM  building`
+					FROM  building B`
 	let rs = await mysqlConn.query(select, [])
 	if (rs[0].length === 0) {
 		res.status(404).json()
