@@ -39,7 +39,12 @@ router.get('/building/:uuid', async (req, res) => {
 		return
 	}
 
-	let select = `SELECT * FROM  building WHERE uuid = ?`
+	let select = `SELECT *, 
+					(SELECT json_arrayagg(json_object('deviceId', BD.deviceId, 'uuid', BD.deviceUuid, 'type', BD.type))
+						FROM buildingdevices BD
+						WHERE BD.buildingId = B.id) as devices
+					FROM  building B 
+					WHERE B.uuid = ?`
 	let rs = await mysqlConn.query(select, [req.params.uuid])
 	if (rs[0].length === 0) {
 		res.status(404).json()
