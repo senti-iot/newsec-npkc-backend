@@ -28,8 +28,9 @@ app.use(cors())
 
 const getBuilding = require('./api/building/getBuilding')
 const getBuildings = require('./api/building/getBuildings')
+const getBuildingsSum = require('./api/data/getBuildingsSum')
 
-app.use([getBuilding, getBuildings])
+app.use([getBuilding, getBuildings, getBuildingsSum])
 
 //---Start the express server---------------------------------------------------
 
