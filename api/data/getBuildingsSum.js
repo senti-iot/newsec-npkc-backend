@@ -77,7 +77,13 @@ router.get('/data/buildingssum/:from/:to', async (req, res) => {
 	data.data.map(d => {
 		result[d.uuid].value = d.val
 	})
-
-	res.status(200).json(Object.values(result))
+	let sortResult = Object.values(result)
+	sortResult.sort((a, b) => {
+		if (a.value < b.value) return 1;
+		if (a.value > b.value) return -1;
+		return 0;
+	})
+	console.log(sortResult)
+	res.status(200).json(sortResult)
 })
 module.exports = router
