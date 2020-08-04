@@ -50,4 +50,21 @@ router.get('/buildings', async (req, res) => {
 	}
 	res.status(200).json(rs[0])
 })
+router.get('/buildings/co2score', async (req, res) => {
+	let lease = await authClient.getLease(req)
+	if (lease === false) {
+		res.status(401).json()
+		return
+	}
+	let select = `SELECT sum(relativeCO2Score)/count(*) as co2score, 
+						count(*) as antal, 
+						sum(relativeCO2Score) as co2scoretotal
+					FROM  building B`
+	let rs = await mysqlConn.query(select, [])
+	if (rs[0].length === 0) {
+		res.status(404).json()
+		return
+	}
+	res.status(200).json(rs[0])
+})
 module.exports = router
