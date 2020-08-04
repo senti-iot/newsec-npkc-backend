@@ -65,6 +65,10 @@ router.get('/buildings/averageco2score', async (req, res) => {
 		res.status(404).json()
 		return
 	}
-	res.status(200).json(rs[0])
+	if (rs[0].length !== 1) {
+		res.status(400).json()
+		return
+	}
+	res.status(200).json(rs[0][0])
 })
 module.exports = router
