@@ -58,7 +58,7 @@ router.get('/data/buildingssum/:from/:to', async (req, res) => {
 	// let authUser = authClient.api.get('v2/auth/user')
 	// console.log(authUser)
 
-	let select = `SELECT uuid as buildingUuid, \`no\` as buildingNo, name, deviceId, deviceUuid
+	let select = `SELECT uuid as buildingUuid, \`no\` as buildingNo, name, arealHeated*1.000 as arealHeated, deviceId, deviceUuid
 					FROM building B
 						INNER JOIN buildingdevices BD ON B.id = BD.buildingId AND BD.type = 'emission'`
 	let rs = await mysqlConn.query(select, [])
@@ -73,9 +73,10 @@ router.get('/data/buildingssum/:from/:to', async (req, res) => {
 	})
 	dataBrokerAPI.setHeader('Authorization', 'Bearer ' + lease.token)
 	let data = await dataBrokerAPI.post(`/v2/newsec/buildingsum/${req.params.from}/${req.params.to}`, queryIds)
-	console.log(data.data)
+	// console.log('data', data.data)
 	data.data.map(d => {
-		result[d.uuid].value = d.val
+		result[d.uuid].realvalue = d.val
+		result[d.uuid].value = (d.val / result[d.uuid].arealHeated) * 1000
 	})
 	let sortResult = Object.values(result)
 	sortResult.sort((a, b) => {
