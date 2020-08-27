@@ -76,27 +76,38 @@ router.get('/data/deviceemissionstats/:uuid/:field/:from/:to', async (req, res) 
 	dates.previousFrom = moment(req.params.from).subtract(dates.days, 'days')
 
 
+
+
 	dataBrokerAPI.setHeader('auth', process.env.SENTIDATABROKERV1AUTH)
 	let data1 = await dataBrokerAPI.get(`/v1/devicedata-clean/${rs[0][0].deviceId}/${dates.from.format('YYYY-MM-DD HH:mm:ss')}/${dates.to.format('YYYY-MM-DD HH:mm:ss')}/${req.params.field}/-1`)
- 	console.log(`/v1/devicedata-clean/${rs[0][0].deviceId}/${dates.from.format('YYYY-MM-DD HH:mm:ss')}/${dates.to.format('YYYY-MM-DD HH:mm:ss')}/${req.params.field}/-1`, data1.data)
+ 	// console.log(`/v1/devicedata-clean/${rs[0][0].deviceId}/${dates.from.format('YYYY-MM-DD HH:mm:ss')}/${dates.to.format('YYYY-MM-DD HH:mm:ss')}/${req.params.field}/-1`, data1.data)
 	let result = {
 		actualSum: 0,
+		actualCount: 0,
 		previousSum: 0,
 		averageSum: 0,
-		reduction: 0
+		reduction: 0,
+		unit: "g"
 	}
 	Object.keys(data1.data).map((key) => {
-		result.actualSum += data1.data[key] 
+		result.actualSum += data1.data[key]
+		result.actualCount += 1
 	})
 	let data2 = await dataBrokerAPI.get(`/v1/devicedata-clean/${rs[0][0].deviceId}/${dates.previousFrom.format('YYYY-MM-DD HH:mm:ss')}/${dates.from.format('YYYY-MM-DD HH:mm:ss')}/${req.params.field}/-1`)
-	console.log(`/v1/devicedata-clean/${rs[0][0].deviceId}/${dates.previousFrom.format('YYYY-MM-DD HH:mm:ss')}/${dates.from.format('YYYY-MM-DD HH:mm:ss')}/${req.params.field}/-1`, data2.data)
+	// console.log(`/v1/devicedata-clean/${rs[0][0].deviceId}/${dates.previousFrom.format('YYYY-MM-DD HH:mm:ss')}/${dates.from.format('YYYY-MM-DD HH:mm:ss')}/${req.params.field}/-1`, data2.data)
 	Object.keys(data2.data).map((key) => {
 		result.previousSum += data2.data[key] 
 	})
 
-	result.averageSum = 1000 * (result.actualSum / dates.days) / rs[0][0].arealHeated
-	result.actualSum = 1000 * (result.actualSum / rs[0][0].arealHeated)
-	result.previousSum = 1000 * (result.previousSum / rs[0][0].arealHeated)
+	let multiplier = 1000000
+	if ((result.actualSum / rs[0][0].arealHeated) >= 0.001) {
+		multiplier = 1000
+		result.unit = "kg"
+	}
+
+	result.averageSum = multiplier * (result.actualSum / result.actualCount) / rs[0][0].arealHeated
+	result.actualSum = multiplier * (result.actualSum / rs[0][0].arealHeated)
+	result.previousSum = multiplier * (result.previousSum / rs[0][0].arealHeated)
 	result.reduction = 100 * (1 - result.actualSum / result.previousSum)
 
 	res.status(200).json(result)
