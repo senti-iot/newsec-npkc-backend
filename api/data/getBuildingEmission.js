@@ -39,35 +39,32 @@ const dataBrokerAPI = createAPI({
 		'User-Agent': 'Senti.io v2'
 	}
 })
-
 /**
  * Route serving a device based on UUID provided
  * @function GET /building/:uuid
  * @memberof module:routers/devices
  * @param {String} req.params.uuid UUID of the Requested Device
  */
-router.get('/data/buildingbenchmark/:from/:to', async (req, res) => {
+router.get('/data/deviceemission/:uuid/:field/:from/:to', async (req, res) => {
 	let lease = await authClient.getLease(req)
 	if (lease === false) {
 		res.status(401).json()
 		return
 	}
-	let select = `SELECT SUM(arealHeated) as arealHeated
+	let select = `SELECT B.arealHeated, BD.deviceId
 	FROM building B
-		INNER JOIN buildingdevices BD ON B.id = BD.buildingId AND BD.type = 'emission'`
-	let rs = await mysqlConn.query(select, [])
+		INNER JOIN buildingdevices BD ON B.id = BD.buildingId AND BD.deviceUuid = ?`
+	let rs = await mysqlConn.query(select, [req.params.uuid])
 	if (rs[0].length !== 1) {
 		res.status(500).json()
 		return
 	}
 
-	dataBrokerAPI.setHeader('Authorization', 'Bearer ' + lease.token)
-	let data = await dataBrokerAPI.get(`/v2/newsec/benchmarkbyday/74/82/${req.params.from}/${req.params.to}`)
+	dataBrokerAPI.setHeader('auth', process.env.SENTIDATABROKERV1AUTH)
+	let data = await dataBrokerAPI.get(`/v1/devicedata-clean/${rs[0][0].deviceId}/${req.params.from}/${req.params.to}/${req.params.field}/-1`)
 
-	data.data.map(d => {
-		d.arealHeated = rs[0][0].arealHeated
-		d.valueTon = d.value
-		d.value = (d.total / rs[0][0].arealHeated) * 1000
+	Object.keys(data.data).map((key) => {
+		data.data[key] = (data.data[key] / rs[0][0].arealHeated) * 1000
 	})
 
 	console.log(data.data)
