@@ -67,7 +67,7 @@ router.get('/data/buildingbenchmark/:from/:to', async (req, res) => {
 	data.data.map(d => {
 		d.arealHeated = rs[0][0].arealHeated
 		d.valueTon = d.value
-		d.value = (d.total / rs[0][0].arealHeated) * 1000
+		d.value = (d.total / rs[0][0].arealHeated) * 1000000
 	})
 
 	console.log(data.data)

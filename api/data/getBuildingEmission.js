@@ -64,7 +64,7 @@ router.get('/data/deviceemission/:uuid/:field/:from/:to', async (req, res) => {
 	let data = await dataBrokerAPI.get(`/v1/devicedata-clean/${rs[0][0].deviceId}/${req.params.from}/${req.params.to}/${req.params.field}/-1`)
 
 	Object.keys(data.data).map((key) => {
-		data.data[key] = (data.data[key] / rs[0][0].arealHeated) * 1000
+		data.data[key] = (data.data[key] / rs[0][0].arealHeated) * 1000000
 	})
 
 	console.log(data.data)
