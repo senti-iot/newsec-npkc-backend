@@ -100,12 +100,13 @@ router.get('/data/deviceemissionstats/:uuid/:field/:from/:to', async (req, res) 
 	})
 
 	let multiplier = 1000000
+
+	result.averageSum = multiplier * (result.actualSum / result.actualCount) / rs[0][0].arealHeated
+	
 	if ((result.actualSum / rs[0][0].arealHeated) >= 0.001) {
 		multiplier = 1000
 		result.unit = "kg"
 	}
-
-	result.averageSum = multiplier * (result.actualSum / result.actualCount) / rs[0][0].arealHeated
 	result.actualSum = multiplier * (result.actualSum / rs[0][0].arealHeated)
 	result.previousSum = multiplier * (result.previousSum / rs[0][0].arealHeated)
 	result.reduction = 100 * (1 - result.actualSum / result.previousSum)
