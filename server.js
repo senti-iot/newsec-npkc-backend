@@ -18,8 +18,8 @@ module.exports.authClient = authClient
 const port = process.env.NODE_PORT || 3032
 
 app.use(helmet())
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 app.use(cors())
 
@@ -27,13 +27,16 @@ app.use(cors())
 
 
 const getBuilding = require('./api/building/getBuilding')
+const getBuildingImages = require('./api/building/getBuildingImages')
+const addBuildingImage = require('./api/building/addBuildingImage')
+const getBuildingImage = require('./api/building/getBuildingImage')
 const getBuildings = require('./api/building/getBuildings')
 const getBuildingsSum = require('./api/data/getBuildingsSum')
 const getBuildingBenchmark = require('./api/data/getBuildingBenchmark')
 const getBuildingEmission = require('./api/data/getBuildingEmission')
 const getBuildingEmissionStats = require('./api/data/getBuildingEmissionStats')
 
-app.use([getBuilding, getBuildings, getBuildingsSum, getBuildingBenchmark, getBuildingEmission, getBuildingEmissionStats])
+app.use([getBuilding, getBuildingImages, addBuildingImage, getBuildingImage, getBuildings, getBuildingsSum, getBuildingBenchmark, getBuildingEmission, getBuildingEmissionStats])
 
 //---Start the express server---------------------------------------------------
 
