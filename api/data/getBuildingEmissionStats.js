@@ -109,7 +109,7 @@ router.get('/data/deviceemissionstats/:uuid/:field/:from/:to', async (req, res) 
 	}
 	result.actualSum = multiplier * (result.actualSum / rs[0][0].arealHeated)
 	result.previousSum = multiplier * (result.previousSum / rs[0][0].arealHeated)
-	result.reduction = 100 * (1 - result.actualSum / result.previousSum)
+	result.reduction = result.previousSum > 0 ? Math.round(10000 * (1 - result.actualSum / result.previousSum)) / 100 : '-'
 
 	res.status(200).json(result)
 })
