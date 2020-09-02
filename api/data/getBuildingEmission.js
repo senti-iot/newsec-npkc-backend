@@ -63,11 +63,16 @@ router.get('/data/deviceemission/:uuid/:field/:from/:to', async (req, res) => {
 	dataBrokerAPI.setHeader('auth', process.env.SENTIDATABROKERV1AUTH)
 	let data = await dataBrokerAPI.get(`/v1/devicedata-clean/${rs[0][0].deviceId}/${req.params.from}/${req.params.to}/${req.params.field}/-1`)
 
+	let result = []
 	Object.keys(data.data).map((key) => {
-		data.data[key] = (data.data[key] / rs[0][0].arealHeated) * 1000000
+		// data.data[key] = (data.data[key] / rs[0][0].arealHeated) * 1000000
+		result.push({
+			"date": key,
+			"value": (data.data[key] / rs[0][0].arealHeated) * 1000000 
+		})
 	})
 
-	console.log(data.data)
-	res.status(200).json(data.data)
+	// console.log(data.data)
+	res.status(200).json(result)
 })
 module.exports = router
