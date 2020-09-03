@@ -17,8 +17,17 @@ router.get('/building/:uuid/image/:filename', async (req, res) => {
 	if (!fs.existsSync(filePath)) {
 		res.status(404).json();
 	} else {
-		res.type(path.extname(req.params.filename).substr(1));
-		res.sendFile(filePath);
+		let contents = fs.readFileSync(filePath, { encoding: 'base64' });
+		let ext = path.extname(req.params.filename).substr(1);
+
+		if (ext === 'png') {
+			contents = 'data: image/png; base64,' + contents;
+		} else {
+			contents = 'data: image/jpeg; base64,' + contents;
+		}
+
+		res.setHeader('content-type', 'text/plain');
+		res.status(200).send(contents);
 	}
 
 });

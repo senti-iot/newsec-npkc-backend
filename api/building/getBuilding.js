@@ -54,6 +54,17 @@ router.get('/building/:uuid', async (req, res) => {
 		res.status(400).json()
 		return
 	}
+
+	let selectImages = 'SELECT filename FROM buildingimages WHERE buildingUuid = ?';
+	let rsImages = await mysqlConn.query(selectImages, [req.params.uuid]);
+
+	let images = [];
+	if (rs[0].length > 0) {
+		images = rsImages[0];
+	}
+
+	rs[0][0].images = images;
+
 	res.status(200).json(rs[0][0])
 })
 
