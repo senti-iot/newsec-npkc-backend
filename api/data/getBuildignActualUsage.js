@@ -77,6 +77,7 @@ router.get('/data/buildingusage/:uuid', async (req, res) => {
 	dataBrokerAPI.setHeader('Authorization', 'Bearer ' + lease.token)
 	let data = await dataBrokerAPI.post(`/v2/newsec/building/energyusage`, queryIds)
 
+	console.log(data.ok, data.data)
 	data.data.map(d => {
 		console.log(d)
 		switch (deviceTypes[d.uuid]) {
