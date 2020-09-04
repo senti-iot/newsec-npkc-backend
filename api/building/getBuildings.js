@@ -48,7 +48,25 @@ router.get('/buildings', async (req, res) => {
 		res.status(404).json()
 		return
 	}
-	res.status(200).json(rs[0])
+
+	let buildings = [];
+	await Promise.all(
+		rs[0].map(async building => {
+			let selectImages = 'SELECT filename FROM buildingimages WHERE buildingUuid = ?';
+			let rsImages = await mysqlConn.query(selectImages, [building.uuid]);
+
+			let images = [];
+			if (rs[0].length > 0) {
+				images = rsImages[0];
+			}
+
+			building.images = images;
+
+			buildings.push(building);
+		})
+	);
+
+	res.status(200).json(buildings)
 })
 router.get('/buildings/averageco2score', async (req, res) => {
 	let lease = await authClient.getLease(req)
