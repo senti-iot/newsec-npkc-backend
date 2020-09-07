@@ -41,9 +41,12 @@ router.get('/buildings', async (req, res) => {
 	let select = `SELECT id, uuid, no, name, grouptype, relativeCO2Score, streetName, houseNumber, zipcode, city, lat, lon, owner,
 					(SELECT json_arrayagg(json_object('deviceId', BD.deviceId, 'uuid', BD.deviceUuid, 'type', BD.type))
 						FROM buildingdevices BD
-						WHERE BD.buildingId = B.id) as devices 
+						WHERE BD.buildingId = B.id) as devices,
+					(SELECT json_arrayagg(json_object('year', BG.year, 'goal', BG.goal))
+						FROM buildinggoals BG
+						WHERE BG.buildingId = B.id) as goals 
 					FROM  building B
-					ORDER BY name ASC`
+					ORDER BY name`
 	let rs = await mysqlConn.query(select, [])
 	if (rs[0].length === 0) {
 		res.status(404).json()
