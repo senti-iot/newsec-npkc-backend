@@ -49,7 +49,7 @@ router.get('/buildings', async (req, res) => {
 						FROM buildingimages BI
 						WHERE BI.buildingUuid = B.uuid) as images
 					FROM  building B
-					ORDER BY name`
+					ORDER BY no DESC`
 	let rs = await mysqlConn.query(select, [])
 	if (rs[0].length === 0) {
 		res.status(404).json()
