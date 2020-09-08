@@ -44,7 +44,10 @@ router.get('/buildings', async (req, res) => {
 						WHERE BD.buildingId = B.id) as devices,
 					(SELECT json_arrayagg(json_object('year', BG.year, 'goal', BG.goal))
 						FROM buildinggoals BG
-						WHERE BG.buildingId = B.id) as goals 
+						WHERE BG.buildingId = B.id) as goals,
+					(SELECT json_arrayagg(BI.filename)
+						FROM buildingimages BI
+						WHERE BI.buildingUuid = B.uuid) as images
 					FROM  building B
 					ORDER BY name`
 	let rs = await mysqlConn.query(select, [])
@@ -53,24 +56,7 @@ router.get('/buildings', async (req, res) => {
 		return
 	}
 
-	let buildings = [];
-	await Promise.all(
-		rs[0].map(async building => {
-			let selectImages = 'SELECT filename FROM buildingimages WHERE buildingUuid = ?';
-			let rsImages = await mysqlConn.query(selectImages, [building.uuid]);
-
-			let images = [];
-			if (rs[0].length > 0) {
-				images = rsImages[0];
-			}
-
-			building.images = images;
-
-			buildings.push(building);
-		})
-	);
-
-	res.status(200).json(buildings)
+	res.status(200).json(rs[0])
 })
 router.get('/buildings/averageco2score', async (req, res) => {
 	let lease = await authClient.getLease(req)
