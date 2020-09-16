@@ -58,7 +58,7 @@ router.get('/data/buildingssum/:from/:to', async (req, res) => {
 	// let authUser = authClient.api.get('v2/auth/user')
 	// console.log(authUser)
 
-	let select = `SELECT uuid as buildingUuid, \`no\` as buildingNo, name, arealHeated*1.000 as arealHeated, deviceId, deviceUuid
+	let select = `SELECT uuid as buildingUuid, \`no\` as buildingNo, name, arealHeated*1.000 as arealHeated, deviceId, deviceUuid, 0 as value
 					FROM building B
 						INNER JOIN buildingdevices BD ON B.id = BD.buildingId AND BD.type = 'emission'`
 	let rs = await mysqlConn.query(select, [])
