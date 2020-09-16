@@ -45,7 +45,10 @@ router.get('/building/:uuid', async (req, res) => {
 						WHERE BD.buildingId = B.id) as devices,
 					(SELECT json_arrayagg(json_object('year', BG.year, 'goal', BG.goal))
 						FROM buildinggoals BG
-						WHERE BG.buildingId = B.id) as goals	
+						WHERE BG.buildingId = B.id) as goals,
+					(SELECT json_arrayagg(BI.filename)
+						FROM buildingimages BI
+						WHERE BI.buildingUuid = B.uuid) as images	
 					FROM  building B 
 					WHERE B.uuid = ?`
 	let rs = await mysqlConn.query(select, [req.params.uuid])
@@ -57,16 +60,6 @@ router.get('/building/:uuid', async (req, res) => {
 		res.status(400).json()
 		return
 	}
-
-	let selectImages = 'SELECT filename FROM buildingimages WHERE buildingUuid = ?';
-	let rsImages = await mysqlConn.query(selectImages, [req.params.uuid]);
-
-	let images = [];
-	if (rs[0].length > 0) {
-		images = rsImages[0];
-	}
-
-	rs[0][0].images = images;
 
 	res.status(200).json(rs[0][0])
 })
