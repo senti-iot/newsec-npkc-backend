@@ -54,7 +54,7 @@ router.get('/data/buildingemissiontodate/:uuid', async (req, res) => {
 	}
 	let select = `SELECT BG.year, BG.goal, BD.deviceUuid
 					FROM building B
-						INNER JOIN buildinggoals BG ON B.id = BG.buildingId AND BG.year = YEAR(NOW())
+						LEFT JOIN buildinggoals BG ON B.id = BG.buildingId AND BG.year = YEAR(NOW())
 						INNER JOIN buildingdevices BD ON B.id = BD.buildingId AND BD.type = 'emission'
 					WHERE B.uuid = ?`
 	let rs = await mysqlConn.query(select, [req.params.uuid])
