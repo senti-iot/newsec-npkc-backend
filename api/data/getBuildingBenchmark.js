@@ -88,7 +88,7 @@ router.get('/data/buildingbenchmark/:uuid/:from/:to', async (req, res) => {
 		res.status(401).json()
 		return
 	}
-	let select = `SELECT SUM(arealHeated) as arealHeated,  json_arrayagg(deviceUuid) as devices
+	let select = `SELECT SUM(arealHeated) as arealHeated, json_arrayagg(deviceUuid) as devices
 					FROM building B
 						INNER JOIN buildingdevices BD ON B.id = BD.buildingId AND BD.type = 'emission'
 					WHERE grouptype = (SELECT grouptype FROM building WHERE uuid = ?)`
