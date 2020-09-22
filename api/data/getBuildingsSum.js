@@ -108,8 +108,8 @@ router.get('/data/buildingssum/:group/:from/:to', async (req, res) => {
 	let clause = ''
 	let sqlParam = []
 	if (req.params.group > 0) {
-		clause = ' AND B.grouptype = \'Gruppe ?\''
-		sqlParam.push(req.params.group)
+		clause = ' AND B.grouptype = ?'
+		sqlParam.push('Gruppe ' + req.params.group)
 	}
 	let select = `SELECT uuid as buildingUuid, \`no\` as buildingNo, name, arealHeated*1.000 as arealHeated, deviceId, deviceUuid, 0 as value
 					FROM building B
