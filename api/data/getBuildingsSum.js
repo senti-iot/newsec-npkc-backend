@@ -115,6 +115,7 @@ router.get('/data/buildingssum/:group/:from/:to', async (req, res) => {
 					FROM building B
 						INNER JOIN buildingdevices BD ON B.id = BD.buildingId AND BD.type = 'emission'
 					WHERE 1 ${clause}`
+	console.log(mysqlConn.format(select, sqlParam))
 	let rs = await mysqlConn.query(select, sqlParam)
 	if (rs[0].length === 0) {
 		res.status(404).json()
