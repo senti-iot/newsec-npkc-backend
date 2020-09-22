@@ -32,6 +32,7 @@ const addBuildingImage = require('./api/building/addBuildingImage')
 const getBuildingImage = require('./api/building/getBuildingImage')
 const getBuildings = require('./api/building/getBuildings')
 const getBuildingsSum = require('./api/data/getBuildingsSum')
+const getYearlyCo2 = require('./api/data/getYearlyCo2')
 const getBuildingBenchmark = require('./api/data/getBuildingBenchmark')
 const getBuildingEmission = require('./api/data/getBuildingEmission')
 const getBuildingEmissionStats = require('./api/data/getBuildingEmissionStats')
@@ -39,8 +40,8 @@ const getBuildingActualUsage = require('./api/data/getBuildingActualUsage')
 const getBuildingEmissionTodate = require('./api/data/getBuildingEmissionTodate')
 
 app.use([getBuilding, getBuildingImages, addBuildingImage, getBuildingImage, getBuildings, 
-	getBuildingsSum, getBuildingBenchmark, getBuildingEmission, getBuildingEmissionStats, 
-	getBuildingActualUsage, getBuildingEmissionTodate])
+	getBuildingsSum, getYearlyCo2, getBuildingBenchmark, getBuildingEmission, 
+	getBuildingEmissionStats, getBuildingActualUsage, getBuildingEmissionTodate])
 
 //---Start the express server---------------------------------------------------
 
