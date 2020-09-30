@@ -129,17 +129,20 @@ router.get('/data/buildingssum/:group/:from/:to', async (req, res) => {
 	dataBrokerAPI.setHeader('Authorization', 'Bearer ' + lease.token)
 	let data = await dataBrokerAPI.post(`/v2/newsec/buildingsum/${req.params.from}/${req.params.to}`, queryIds)
 	// console.log('data', data.data)
+	let average = 0
 	data.data.map(d => {
 		result[d.uuid].realvalue = d.val
 		result[d.uuid].value = (d.val / result[d.uuid].arealHeated) * 1000
+		average += result[d.uuid].value
 	})
 	let sortResult = Object.values(result)
+	average = average / sortResult.length
 	sortResult.sort((a, b) => {
 		if (a.value < b.value) return 1;
 		if (a.value > b.value) return -1;
 		return 0;
 	})
-	console.log(sortResult)
-	res.status(200).json(sortResult)
+	console.log({ "average": average, "data": sortResult })
+	res.status(200).json({ "average": average, "data": sortResult })
 })
 module.exports = router
