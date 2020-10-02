@@ -20,12 +20,6 @@ const router = express.Router()
  */
 const createAPI = require('apisauce').create
 /**
- * moment
- * @const
- */
-const moment = require('moment')
-
-/**
  * MySQL connector
  * @const
  */
