@@ -6,7 +6,7 @@ Documentation=https://github.com/senti-iot/newsec-backend/blob/master/README.md
 
 [Service]
 WorkingDirectory=/srv/nodejs/senti/services/newsec/development
-ExecStart=/usr/bin/node server.js
+ExecStart=/usr/local/bin/node server.js
 Environment=NODE_PORT=3032
 Environment=NODE_ENV=development
 Type=simple
