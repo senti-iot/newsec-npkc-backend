@@ -39,7 +39,7 @@
 		"find-config": "^1.0.0",
 		"helmet": "^4.1.0",
 		"jimp": "^0.16.1",
-		"moment": "^2.27.0",
+		"moment": "^2.29.4",
 		"mysql2": "^2.1.0",
 		"pino": "^6.5.1",
 		"senti-apicore": "0.0.50",
